@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peer Instruction | Introduction to Python</title>
+<style>
+:root{--ink:#172033;--muted:#667085;--line:#e5e9f0;--paper:#fff;--bg:#f5f7fb;--brand:#3659c9;--brand2:#eaf0ff;--green:#16794b;--greenbg:#eaf8f0;--red:#b42318;--redbg:#fff0ef;--amber:#8a5b00;--amberbg:#fff6df}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#172b65,#3659c9);color:#fff;padding:32px 20px 28px}
+.wrap{max-width:1000px;margin:auto;padding:0 18px}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.76rem;font-weight:750;opacity:.8}
+h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.15;margin:8px 0}
+header p{max-width:680px;margin:10px 0 0;color:#e8edff}
+main{padding:24px 0 54px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.tabs{display:flex;background:#e8ecf5;padding:4px;border-radius:12px;gap:4px}
+button{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:10px 14px;font-weight:650}
+.tabs button{background:transparent;color:#4d5870}.tabs button.active{background:#fff;color:var(--brand);box-shadow:0 1px 4px #14204418}
+.action{background:var(--brand);color:#fff}.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.progress-area{background:#fff;border:1px solid var(--line);padding:14px 16px;border-radius:14px;margin-bottom:18px}
+.progress-top{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;color:var(--muted);margin-bottom:8px}
+.track{height:7px;background:#edf0f6;border-radius:9px;overflow:hidden}.fill{height:100%;background:var(--brand);width:0%;transition:width .2s}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 4px 18px #1a2b4d08}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}
+.tag{font-size:.78rem;font-weight:750;color:var(--brand);background:var(--brand2);border-radius:999px;padding:5px 10px}
+.qnum{color:var(--muted);font-size:.9rem;font-weight:700}
+h2{font-size:1.25rem;line-height:1.35;margin:8px 0 14px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#101a2d;color:#f2f5ff;border-radius:11px;padding:15px 16px;font: .92rem/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;margin:14px 0}
+.options{display:grid;gap:10px;margin:18px 0}
+.option{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:1px solid #dfe4ed;padding:13px 14px;border-radius:11px;color:var(--ink);font-weight:500;width:100%}
+.option:hover{border-color:#8da4f1;background:#fafbff}.option.selected{border-color:var(--brand);background:var(--brand2);box-shadow:0 0 0 1px var(--brand) inset}
+.letter{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#f0f2f7;font-weight:750;color:#48536a}
+.option.selected .letter{background:var(--brand);color:white}
+.feedback{padding:12px 14px;border-radius:10px;margin:12px 0;font-size:.94rem}.feedback.good{background:var(--greenbg);color:var(--green)}.feedback.bad{background:var(--amberbg);color:var(--amber)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}.nav .right{display:flex;gap:8px}
+.note{color:var(--muted);font-size:.9rem}
+.keylist{display:grid;gap:12px}.keyitem{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}.keyitem h3{margin:0 0 6px;font-size:1rem}.answer{font-weight:800;color:var(--green)}.small{font-size:.9rem;color:var(--muted)}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);padding:0 18px 30px;font-size:.85rem}
+@media(max-width:600px){.toolbar{align-items:stretch}.tabs{width:100%}.tabs button{flex:1}.toolbar .secondary{width:100%}.nav button{flex:1}.card{padding:17px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="eyebrow">Peer Instruction · Module 1</div>
+<h1>Introduction to Python Programming</h1>
+<p>Explore simple programs, variables, input and output, type conversion, and validated input. Choose an answer, explain your reasoning to a peer, and then vote again.</p>
+</div></header>
+<main class="wrap">
+<div class="toolbar">
+  <div class="tabs" role="tablist" aria-label="Website view">
+    <button id="studentTab" class="active" role="tab" aria-selected="true">Student quiz</button>
+    <button id="instructorTab" role="tab" aria-selected="false">Instructor answer key</button>
+  </div>
+  <button id="resetBtn" class="secondary">Reset responses</button>
+</div>
+<section id="studentView">
+  <div class="progress-area">
+    <div class="progress-top"><span id="progressText">Question 1 of 10</span><span id="answeredText">0 answered</span></div>
+    <div class="track"><div class="fill" id="progressFill"></div></div>
+  </div>
+  <article class="card">
+    <div class="qhead"><span class="tag" id="topicTag">Program tracing</span><span class="qnum" id="qNumber">QUESTION 01</span></div>
+    <h2 id="questionTitle"></h2>
+    <div id="questionBody"></div>
+    <div class="options" id="options"></div>
+    <div id="feedback" aria-live="polite"></div>
+    <div class="nav">
+      <button id="prevBtn" class="secondary">← Previous</button>
+      <div class="right"><button id="revealBtn" class="secondary">Reveal explanation</button><button id="nextBtn" class="action">Next question →</button></div>
+    </div>
+  </article>
+  <p class="note">Suggested routine: individual vote → peer discussion (2–3 minutes) → revote → instructor debrief.</p>
+</section>
+<section id="instructorView" class="hidden">
+  <div class="card" style="margin-bottom:16px">
+    <h2 style="margin-top:0">Instructor answer key</h2>
+    <p class="note">Use this view after students have committed to an answer. The explanations identify the central concept and common misconception.</p>
+    <div class="keylist" id="keyList"></div>
+  </div>
+</section>
+</main>
+<footer>Peer Instruction question set · Introduction to Python Programming</footer>
+<script>
+const questions = [
+ {topic:"Program tracing",title:"What does this simple program display?",code:"x = 5\\ny = 3\\nprint(x + y)",opts:["x + y","53","8","An error occurs because two variables are added."],ans:2,why:"Python evaluates x + y using the integer values stored in the variables, so it displays 8.",mis:"Confusing an expression with literal text, or confusing numeric addition with string concatenation."},
+ {topic:"Variables",title:"What will be displayed after the variable is assigned twice?",code:"age = 18\\nage = 20\\nprint(age)",opts:["18","20","18 20","An error occurs because a variable cannot be assigned twice."],ans:1,why:"The second assignment updates the value stored in age. The final value is 20.",mis:"Believing that a variable permanently retains every value assigned to it."},
+ {topic:"Variable naming",title:"Which is a valid Python variable name?",code:null,opts:["2height","student-age","student_age","class"],ans:2,why:"student_age is valid. Names cannot start with a digit, a hyphen is not allowed in an identifier, and class is a reserved keyword.",mis:"Overlooking identifier rules or reserved keywords."},
+ {topic:"Input and strings",title:"The user enters 25. What does this program display?",code:'age = input("Enter your age: ")\\nprint(age + age)',opts:["50","2525","25 25","A TypeError occurs."],ans:1,why:"input() returns a string. Adding two strings concatenates them, producing 2525.",mis:"Assuming input() automatically returns a number."},
+ {topic:"Type conversion",title:"How should the student fix this program so 4 and 6 produce 10?",code:'a = input("Enter first number: ")\\nb = input("Enter second number: ")\\nprint(a + b)',opts:['Replace the last line with print(int(a) + int(b)).','Replace the last line with print(a, b).','Use a = print(input("Enter first number: ")).','Replace the last line with print(str(a + b)).'],ans:0,why:"Convert each input string to an integer before adding. Then + performs numeric addition.",mis:"Thinking that printing two values or converting the final concatenated string will perform arithmetic."},
+ {topic:"Output",title:"What does print() display when given these two arguments?",code:'name = "Anu"\\nage = 19\\nprint(name, age)',opts:["name age","Anu19","Anu 19","An error occurs because the values have different types."],ans:2,why:"print() accepts values of different types and separates multiple arguments with a space by default.",mis:"Assuming all values passed to print() must have the same type, or that arguments are automatically concatenated."},
+ {topic:"Strings and numbers",title:"What happens if the print statement is changed as shown?",code:'height = 1.65\\nprint("Height: " + height)',opts:["It displays Height: 1.65 as before.","It displays Height: height.","It displays Height: 1.65 without a space.","A TypeError occurs because a string cannot be concatenated with a float."],ans:3,why:"The + operator concatenates strings, but height is a float. Convert it with str(height), or use print('Height:', height).",mis:"Assuming + automatically converts a number to a string."},
+ {topic:"Input validation",title:"Age must be between 0 and 120, inclusive. Which condition checks whether age is valid?",code:"Assume age has already been converted to an integer.",opts:["age > 0 and age < 120","age >= 0 and age <= 120","age >= 0 or age <= 120","age < 0 and age > 120"],ans:1,why:"Both limits are allowed, so use >= and <=. Both conditions must be true, so combine them with and.",mis:"Excluding allowed endpoints or using or when both range conditions must hold."},
+ {topic:"Input validation",title:"Height must be from 0.5 m to 2.5 m, inclusive. Which condition identifies an invalid height?",code:"Assume height has already been converted to a float.",opts:["height < 0.5 and height > 2.5","height >= 0.5 and height <= 2.5","height < 0.5 or height > 2.5","height > 0.5 or height < 2.5"],ans:2,why:"A value is invalid if it is below the minimum OR above the maximum. Either violation is enough.",mis:"Using and for two mutually exclusive boundary violations, or writing a condition that is true for nearly every value."},
+ {topic:"Conditionals",title:"What happens when the user enters 17?",code:'age = int(input("Enter your age: "))\\nif age >= 18:\\n    print("Adult")\\nelse:\\n    print("Minor")',opts:["It displays Adult.","It displays Minor.","It displays both Adult and Minor.","A TypeError occurs because input() returns a string."],ans:1,why:"int() converts the input to 17. Since 17 >= 18 is false, the else branch displays Minor.",mis:"Forgetting the conversion or not tracing which conditional branch runs."},
+ {topic:"Variables",title:"What is displayed?",code:"x = 7\ny = x\nx = 10\nprint(y)",opts:["10","7","17","An error occurs because x changes."],ans:1,why:"When y = x executes, y receives the current value 7. Reassigning x later does not change y.",mis:"Assuming two variables remain linked after one is assigned the value of the other."},
+ {topic:"Variables",title:"What does this program display?",code:"score = 4\nscore = score + 3\nprint(score)",opts:["4","3","7","An error occurs because score appears on both sides."],ans:2,why:"Python evaluates the right-hand side first, then assigns 7 to score.",mis:"Reading assignment as a mathematical equality instead of an update operation."},
+ {topic:"Variable naming",title:"Which name is NOT valid in Python?",code:null,opts:["total_marks","_count","first name","marks2"],ans:2,why:"Variable names cannot contain spaces. An underscore, letters, and digits after the first character are allowed.",mis:"Assuming spaces can be used inside identifiers."},
+ {topic:"Variables",title:"What is displayed?",code:"a = 8\nb = 2\na = b\nprint(a, b)",opts:["8 2","2 2","8 8","An error occurs."],ans:1,why:"The assignment a = b copies the current value of b into a. Both variables then contain 2.",mis:"Thinking assignment swaps values or changes the source variable."},
+ {topic:"Output",title:"What does this program display?",code:'print("Hello")\nprint("Python")',opts:["Hello Python on one line","HelloPython on one line","Hello and Python on separate lines","An error occurs."],ans:2,why:"Each print() call ends with a newline by default, so the text appears on separate lines.",mis:"Assuming consecutive print() calls automatically share a line."},
+ {topic:"Output",title:"What does this statement display?",code:'print("A", "B", sep="-")',opts:["A B","AB","A-B","A,B"],ans:2,why:"The sep parameter controls the separator between print() arguments; here it is a hyphen.",mis:"Assuming print() always uses its default space separator."},
+ {topic:"Output",title:"What does this statement display?",code:'print("Ready", end="!")\nprint("Go")',opts:["Ready!Go","Ready! followed by Go on the next line","ReadyGo!","An error occurs."],ans:0,why:"end changes what print() writes after its output. The first call ends with ! instead of a newline, so the second output follows it.",mis:"Assuming print() always ends with a newline."},
+ {topic:"Strings",title:"What is displayed?",code:'name = "Mira"\nprint("Hello", name)',opts:["HelloMira","Hello Mira","Hello name","An error occurs."],ans:1,why:"print() displays the string and variable value as separate arguments with a space between them.",mis:"Confusing a variable's name with its stored value or assuming no separator."},
+ {topic:"Strings",title:"What does this expression produce?",code:'first = "Py"\nsecond = "thon"\nprint(first + second)',opts:["Py thon","Python","Py+thon","An error occurs."],ans:1,why:"The + operator concatenates strings directly, without adding a space.",mis:"Assuming string concatenation inserts a space automatically."},
+ {topic:"Type conversion",title:"What is displayed?",code:'value = int("12")\nprint(value + 3)',opts:["123","15","12 3","A TypeError occurs."],ans:1,why:"int('12') converts the string to integer 12, so the sum is 15.",mis:"Assuming a numeric-looking string remains a string after int() is applied."},
+ {topic:"Type conversion",title:"What does this program display?",code:'height = float("1.75")\nprint(height)',opts:["It displays the text 1.75 without numeric conversion.","It displays 1.75 as a floating-point value.","It displays 175.","A ValueError occurs."],ans:1,why:"float('1.75') converts the numeric string into a floating-point value.",mis:"Confusing float conversion with string handling or multiplying by 100."},
+ {topic:"Type conversion",title:"What happens when this code runs?",code:'age = int("eighteen")\nprint(age)',opts:["It displays 18.","It displays eighteen.","A ValueError occurs.","A TypeError occurs because int() accepts only variables."],ans:2,why:"The text 'eighteen' is not a valid integer representation, so int() raises ValueError.",mis:"Assuming int() can interpret number words as numeric values."},
+ {topic:"Input",title:"What is the type of the value returned by input()?",code:'number = input("Enter a number: ")',opts:["int","float","str","It depends on whether the user types digits."],ans:2,why:"input() returns a string regardless of whether the user types digits; conversion must be explicit.",mis:"Assuming input() infers the user's intended data type."},
+ {topic:"Input",title:"The user enters 6, then 4. What is displayed?",code:'a = input()\nb = input()\nprint(a + b)',opts:["10","64","6 4","An error occurs."],ans:1,why:"Both inputs are strings, so + concatenates them into '64'.",mis:"Assuming numeric-looking input is automatically added numerically."},
+ {topic:"Input and conversion",title:"Which statement correctly reads a whole-number age?",code:null,opts:["age = input(int())","age = int(input('Age: '))","age = str(input('Age: '))","age = print(input('Age: '))"],ans:1,why:"int(input(...)) first reads a string and then converts it to an integer.",mis:"Confusing the order of input and conversion, or assigning print()'s return value."},
+ {topic:"Input and output",title:"What is displayed if the user enters 21?",code:'age = int(input("Age: "))\nprint("Age next year:", age + 1)',opts:["Age next year: 211","Age next year: 22","Age next year: age + 1","A TypeError occurs."],ans:1,why:"The input is converted to integer 21, then 1 is added. print() separates its arguments with a space.",mis:"Forgetting conversion or confusing numeric addition with string concatenation."},
+ {topic:"Arithmetic",title:"What is displayed?",code:"print(7 / 2)",opts:["3","3.5","3.0","An error occurs because division is not allowed."],ans:1,why:"In Python 3, / performs true division and returns 3.5 for 7 / 2.",mis:"Assuming / performs integer division."},
+ {topic:"Arithmetic",title:"What is displayed?",code:"print(7 // 2)",opts:["3.5","4","3","1"],ans:2,why:"The // operator performs floor division; for positive numbers, 7 // 2 is 3.",mis:"Confusing floor division with true division or rounding to the nearest integer."},
+ {topic:"Arithmetic",title:"What is displayed?",code:"print(2 + 3 * 4)",opts:["20","14","24","An error occurs without parentheses."],ans:1,why:"Multiplication has higher precedence than addition, so the result is 2 + 12 = 14.",mis:"Evaluating all arithmetic operators strictly from left to right."},
+ {topic:"Arithmetic",title:"What is displayed?",code:"print((2 + 3) * 4)",opts:["14","20","24","9"],ans:1,why:"Parentheses are evaluated first, giving 5 * 4 = 20.",mis:"Ignoring the effect of parentheses on evaluation order."},
+ {topic:"Float values",title:"What is displayed?",code:"price = 2.5\nquantity = 4\nprint(price * quantity)",opts:["6.5","10.0","10","24"],ans:1,why:"Multiplying a float by an integer produces the numeric result 10.0 as a float.",mis:"Adding operands instead of multiplying, or assuming the result must be an integer."},
+ {topic:"Comments",title:"Which line is treated as a comment by Python?",code:null,opts:["// calculate total","# calculate total","<!-- calculate total -->","** calculate total"],ans:1,why:"A # begins a Python comment; Python ignores the remainder of that line during execution.",mis:"Applying comment syntax from another programming language."},
+ {topic:"Program tracing",title:"What is displayed, in order?",code:"x = 3\nprint(x)\nx = x + 2\nprint(x)",opts:["3 then 3","5 then 3","3 then 5","5 then 5"],ans:2,why:"The first print occurs before the update and displays 3; the second displays 5.",mis:"Treating output as if it reflects only the final state of a variable."},
+ {topic:"Input validation",title:"A valid age is 18 or older. Which condition checks eligibility?",code:"Assume age is an integer.",opts:["age > 18","age >= 18","age <= 18","age == 18"],ans:1,why:"The >= operator includes 18 and every value above it.",mis:"Excluding the boundary value by using > instead of >=."},
+ {topic:"Input validation",title:"A valid temperature is between 10 and 35 inclusive. Which condition checks validity?",code:"Assume temp is numeric.",opts:["temp >= 10 or temp <= 35","temp > 10 and temp < 35","temp >= 10 and temp <= 35","temp < 10 and temp > 35"],ans:2,why:"Both range conditions must hold, and the endpoints are included.",mis:"Using or for a range check or excluding valid boundary values."},
+ {topic:"Input validation",title:"Which condition accepts only a positive quantity?",code:"Assume quantity is numeric.",opts:["quantity > 0","quantity < 0","quantity == 0","quantity >= 0"],ans:0,why:"A valid quantity must be strictly greater than zero; this condition accepts only positive values.",mis:"Accepting zero when the requirement is a positive quantity."},
+ {topic:"Input validation",title:"A username must not be an empty string. Which check identifies empty input?",code:'username = input("Username: ")',opts:['username == 0','username == ""','username = ""','username != ""'],ans:1,why:"An empty string is represented by ''. Comparing with == checks whether the input is empty.",mis:"Confusing assignment with comparison or comparing a string to numeric zero."},
+ {topic:"Input validation",title:"What happens if the user enters 0.0 for height?",code:'height = float(input("Height in metres: "))\nif height > 0:\n    print("Valid")\nelse:\n    print("Invalid")',opts:["Valid","Invalid","Both Valid and Invalid","A ValueError occurs."],ans:1,why:"0.0 converts successfully to a float, but it does not satisfy height > 0, so Invalid is displayed.",mis:"Assuming numeric conversion itself checks whether a value meets the validation rule."},
+ {topic:"Debugging",title:"Which change prevents a TypeError in this output statement?",code:'age = 20\nprint("Age: " + age)',opts:['print("Age: " + str(age))','print("Age: " - age)','print(int("Age: ") + age)','No change is needed.'],ans:0,why:"str(age) converts the integer to a string so both operands of + are strings.",mis:"Assuming string concatenation automatically converts integers."},
+ {topic:"Input validation",title:"The user must enter a height from 0.5 to 2.5 metres. What should happen for 2.7?",code:'height = float(input("Height: "))\nif 0.5 <= height <= 2.5:\n    print("Accepted")\nelse:\n    print("Try again")',opts:["Accepted","Try again","Both messages","A syntax error occurs."],ans:1,why:"2.7 is greater than the maximum allowed value of 2.5, so the else branch runs.",mis:"Checking only the minimum boundary or assuming conversion validates the range."},
+
+];
+let current=0, responses=Array(questions.length).fill(null), revealed=Array(questions.length).fill(false);
+const $=id=>document.getElementById(id);
+function render(){
+ const q=questions[current];
+ $("progressText").textContent=`Question ${current+1} of ${questions.length}`;
+ $("answeredText").textContent=`${responses.filter(x=>x!==null).length} answered`;
+ $("progressFill").style.width=(responses.filter(x=>x!==null).length/questions.length*100)+"%";
+ $("topicTag").textContent=q.topic;$("qNumber").textContent=`QUESTION ${String(current+1).padStart(2,"0")}`;
+ $("questionTitle").textContent=q.title;
+ $("questionBody").innerHTML=q.code?`<pre>${escapeHtml(q.code.replace(/\\n/g,"\n"))}</pre>`:`<p>Choose the best answer based on the Python concept in this question.</p>`;
+ $("options").innerHTML="";
+ q.opts.forEach((opt,i)=>{
+  const b=document.createElement("button");b.className="option"+(responses[current]===i?" selected":"");b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${escapeHtml(opt)}</span>`;
+  b.onclick=()=>{responses[current]=i;render()};$("options").appendChild(b);
+ });
+ $("feedback").innerHTML="";
+ if(revealed[current]){
+  const correct=responses[current]===q.ans;
+  if(responses[current]!==null && !correct){
+   $("feedback").innerHTML=`<div class="feedback bad"><strong>Think it through</strong><br><span class="small">Misconception to consider: ${escapeHtml(q.mis)}</span></div>`;
+  } else if(correct){
+   $("feedback").innerHTML=`<div class="feedback good"><strong>Correct!</strong><br>${escapeHtml(q.why)}</div>`;
+  } else {
+   $("feedback").innerHTML=`<div class="feedback bad"><strong>Consider the concept</strong><br><span class="small">Misconception to consider: ${escapeHtml(q.mis)}</span></div>`;
+  }
+ }
+ $("prevBtn").disabled=current===0;$("prevBtn").style.opacity=current===0?".45":"1";
+ $("nextBtn").textContent=current===questions.length-1?"Finish quiz":"Next question →";
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+$("prevBtn").onclick=()=>{if(current>0){current--;render()}};
+$("nextBtn").onclick=()=>{if(current<questions.length-1){current++;render()}else{const score=responses.reduce((n,a,i)=>n+(a===questions[i].ans?1:0),0);alert(`Quiz complete: ${responses.filter(x=>x!==null).length}/${questions.length} answered. ${score}/${questions.length} correct among your current responses.`)}};
+$("revealBtn").onclick=()=>{revealed[current]=!revealed[current];$("revealBtn").textContent=revealed[current]?"Hide explanation":"Reveal explanation";render();$("revealBtn").textContent=revealed[current]?"Hide explanation":"Reveal explanation"};
+$("studentTab").onclick=()=>{ $("studentView").classList.remove("hidden");$("instructorView").classList.add("hidden");$("studentTab").classList.add("active");$("instructorTab").classList.remove("active");$("studentTab").setAttribute("aria-selected","true");$("instructorTab").setAttribute("aria-selected","false")};
+$("instructorTab").onclick=()=>{ $("instructorView").classList.remove("hidden");$("studentView").classList.add("hidden");$("instructorTab").classList.add("active");$("studentTab").classList.remove("active");$("instructorTab").setAttribute("aria-selected","true");$("studentTab").setAttribute("aria-selected","false")};
+$("resetBtn").onclick=()=>{if(confirm("Clear all selected answers and explanations?")){current=0;responses=Array(questions.length).fill(null);revealed=Array(questions.length).fill(false);render();}};
+$("keyList").innerHTML=questions.map((q,i)=>`<div class="keyitem"><h3>Q${i+1}. ${escapeHtml(q.topic)} <span class="answer">— Answer ${String.fromCharCode(65+q.ans)}</span></h3><div>${escapeHtml(q.why)}</div><p class="small"><strong>Misconception:</strong> ${escapeHtml(q.mis)}</p></div>`).join("");
+render();
+</script>
+</body>
+</html>
